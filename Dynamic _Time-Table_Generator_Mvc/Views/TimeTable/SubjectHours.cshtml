@@ -1,0 +1,55 @@
+﻿@model Dynamic__Time_Table_Generator_Mvc.Models.TimeTableRequest
+
+@using (Html.BeginForm("GenerateTimetable", "TimeTable", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container mt-5">
+        <!-- Step 2 -->
+        <div class="card shadow-lg border-light mb-4">
+            <div class="card-body">
+                <h4 class="card-title text-center text-primary mb-4">Subject Hours</h4>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <!-- Hidden fields to retain values -->
+                @Html.HiddenFor(model => model.WorkingDays)
+                @Html.HiddenFor(model => model.SubjectsPerDay)
+                @Html.HiddenFor(model => model.TotalSubjects)
+
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-4">
+                        @for (int i = 0; i < Model.Subjects.Count; i++)
+                        {
+                            <!-- Subject Name Input -->
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(model => model.Subjects[i].SubjectName, htmlAttributes: new { @class = "form-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-chalkboard-teacher"></i></span>
+                                    </div>
+                                    @Html.TextBoxFor(model => model.Subjects[i].SubjectName, new { @class = "form-control custom-input rounded", placeholder = "Subject Name" })
+                                </div>
+                            </div>
+
+                            <!-- Subject Hours Input -->
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(model => model.Subjects[i].Hours, htmlAttributes: new { @class = "form-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.Subjects[i].Hours, new { htmlAttributes = new { @class = "form-control custom-input rounded", placeholder = "Enter hours for this subject", autocomplete = "off" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Subjects[i].Hours, "", new { @class = "text-danger" })
+                            </div>
+                        }
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success btn-lg w-100 rounded">Generate Timetable</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
